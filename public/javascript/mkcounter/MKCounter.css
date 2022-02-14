@@ -1,0 +1,364 @@
+.live {
+  position: fixed;
+  top: 5vh;
+  left: 20vw;
+  right: 20vw;
+  width: 60vw;
+  margin: 0 auto;
+  z-index: 6;
+  will-change: opacity;
+  height: 3vh;
+  border-radius: 0;
+  background-color: #fff;
+}
+
+.live::-webkit-meter-inner-element,
+.live::-webkit-meter-bar,
+.live::-webkit-meter-optimum-value,
+.live::-webkit-meter-even-less-good-value {
+  border-radius: 0;
+  height: 3vh;
+  border-width: 0;
+}
+
+:host .live::-moz-progress-bar {
+  background-color: #fff !important;
+}
+
+:host .live::-webkit-meter-bar {
+  background-color: #fff !important;
+}
+
+:host .live::-webkit-meter-bar,
+:host .live:-webkit-meter-bar {
+  background-color: #fff !important;
+}
+
+.sprite {
+  display: none;
+}
+
+.finishHim,
+button {
+  all: unset;
+  appearance: none;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  color: #fff;
+  z-index: 5;
+}
+
+.finishHim svg,
+button svg {
+  width: 20vmax;
+  height: 20vmax;
+  color: inherit;
+  fill: currentColor;
+}
+
+.finishHim {
+  right: 0;
+  margin: auto;
+  width: 20vmax;
+  height: 20vmax;
+  will-change: opacity;
+}
+
+button:hover {
+  color: #d00;
+}
+
+button + button {
+  left: auto;
+  right: 0;
+}
+
+button + button > svg {
+  transform: rotate(180deg);
+}
+
+.container:before {
+  content: "";
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #000a;
+  mix-blend-mode: multiply;
+  opacity: 0;
+  z-index: 3;
+  pointer-events: none;
+  will-change: opacity;
+}
+
+.result {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 5vw;
+  right: 5vw;
+  margin: auto;
+  text-align: center;
+  color: #d00;
+  font-family: "Mortal Kombat 2", sans-serif;
+  text-transform: uppercase;
+  font-weight: normal;
+	font-style: normal;
+  font-size: 7vh;
+  opacity: 0;
+  z-index: 4;
+  height: min-content;
+}
+
+.container.fail:before {
+  opacity: 1;
+  transition: opacity 2s 3s;
+}
+
+.container.win:before {
+  opacity: 1;
+  transition: opacity 2s 1s;
+}
+
+.controls {
+  will-change: opacity;
+  opacity: 1;
+  position: relative;
+  z-index: 4;
+}
+
+.container.fail .live,
+.container.win .live,
+.container.fail .controls,
+.container.win .controls,
+.container.fail .finishHim,
+.container.win .finishHim {
+  opacity: 0;
+  transition: opacity .3s;
+}
+
+.fail .result {
+  color: #d00;
+  opacity: 1;
+  transition: opacity 2s 3s;
+}
+
+.win .result {
+  color: #fff;
+  opacity: 1;
+  transition: opacity 2s 1s;
+}
+
+.scene {
+  --container-width: 352px;
+  --container-height: 1136px;
+  z-index: 1;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  height: 100vh;
+  width: 100vw;
+
+  margin: 0;
+  padding: 0;
+
+  overflow: hidden;
+  overflow: clip;
+
+  background-color: #000028;
+  background-attachment: local;
+  background-size:
+    calc(var(--container-width) * var(--scale, 1)) 
+    calc(var(--container-height) * var(--scale, 1));
+  background-position-x: calc(50% - (90px * var(--scale, 1)));
+  background-position-y: calc(var(--height) * .6);
+  background-repeat: repeat-x;
+  background-image: url('../../images/scene.webp');
+
+  image-rendering: -moz-crisp-edges;
+  image-rendering: pixelated;
+
+  will-change: background-position-y;
+}
+
+.fail .scene {
+  animation: scroll 2.4s both cubic-bezier(0.11, 0, 0.5, 0);
+}
+
+@keyframes scroll {
+  from {
+    background-position-y: calc(var(--height) * .6);
+  }
+  to {
+    background-position-y: calc((var(--container-height) * var(--scale, 1) * -1) + 100vh);
+  }
+}
+
+.liu {
+  --sprite-size-width: 480px;
+  --sprite-size-height: 500px;
+  --container-width: 80px;
+  --container-height: 125px;
+
+  transform: translateY(0);
+  transition: none;
+  margin-left: auto;
+  margin-right: auto;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc((var(--height) * .6) - (var(--container-height) * var(--scale, 1)) + (7px * var(--scale, 1)) );
+  background-image: url('../../images/liu.webp');
+  image-rendering: -moz-crisp-edges;
+  image-rendering: pixelated;
+  width: calc(var(--container-width) * var(--scale, 1));
+  height: calc(var(--container-height) * var(--scale, 1));
+  background-size: calc(var(--sprite-size-width) * var(--scale, 1)) calc(var(--sprite-size-height) * var(--scale, 1));
+  z-index: 2;
+
+  will-change: background-position-x;
+}
+
+.failing .liu {
+  animation: failing 1.2s steps(5) infinite;
+  background-position-y: calc(var(--container-height) * 0);
+}
+
+@keyframes failing {
+  from {
+    background-position-x: 0;
+  }
+  to {
+    background-position-x: calc(var(--container-width) * var(--scale, 1) * -5);
+  }
+}
+
+.winning .liu {
+  background-position-y: calc(var(--container-height) * var(--scale, 1) * -1);
+  animation: winning 2.5s steps(1) infinite;
+}
+
+@keyframes winning {
+  0% {
+    background-position-x: 0;
+  }
+  
+  12.5% {
+    background-position-x: calc(var(--container-width) * var(--scale, 1) * -1);
+  }
+  
+  25% {
+    background-position-x: calc(var(--container-width) * var(--scale, 1) * -2);
+  }
+  
+  37.5% {
+    background-position-x: calc(var(--container-width) * var(--scale, 1) * -3);
+  }
+  
+  50% {
+    background-position-x: calc(var(--container-width) * var(--scale, 1) * -4);
+  }
+  
+  62.5% {
+    background-position-x: calc(var(--container-width) * var(--scale, 1) * -3);
+  }
+  
+  75% {
+    background-position-x: calc(var(--container-width) * var(--scale, 1) * -2);
+  }
+  
+  87.5% {
+    background-position-x: calc(var(--container-width) * var(--scale, 1) * -1);
+  }
+  
+  100% {
+    background-position-x: 0px;
+  }
+}
+
+.win .liu {
+  background-position-y: calc(var(--container-height) * var(--scale, 1) * -2);
+  animation: win .8s steps(5) 1 both;
+}
+
+@keyframes win {
+  from {
+    background-position-x: 0;
+  }
+  to {
+    background-position-x: calc(var(--container-width) * var(--scale, 1) * -5);
+  }
+}
+
+.fail .liu {
+  background-position-x: 0;
+  background-position-y: calc(var(--container-height) * var(--scale, 1) * -3);
+  transform: translateY(calc(var(--height) * .3));
+  transition: transform 2.4s;
+  animation: fall .75s .1s steps(1) infinite forwards,
+             dead .25s 2.5s forwards;
+}
+
+@keyframes fall {
+  0% {
+    background-position-x: calc(var(--container-width) * var(--scale, 1) * -1);
+  }
+  25% {
+    background-position-x: calc(var(--container-width) * var(--scale, 1) * -2);
+  }
+  50% {
+    background-position-x: calc(var(--container-width) * var(--scale, 1) * -3);
+  }
+  75% {
+    background-position-x: calc(var(--container-width) * var(--scale, 1) * -2);
+  }
+  100% {
+    background-position-x: calc(var(--container-width) * var(--scale, 1) * -1);
+  }
+}
+
+.fail .liu .blood {
+  --blood-sprite-width: 150px;
+  --blood-sprite-height: 100px;
+  background-image: url('../../images/blood.webp');
+  animation: blooddrops 1s 2.4s steps(12) 1 forwards;
+  width: calc(var(--blood-sprite-width) * var(--scale, 1));
+  height: calc(var(--blood-sprite-height) * var(--scale, 1));
+  background-size: calc(var(--blood-sprite-width) * var(--scale, 1) * 11) calc(var(--blood-sprite-height) * var(--scale, 1));
+  background-repeat: no-repeat;
+  background-position-y: 0;
+  background-position-x: calc(var(--blood-sprite-width) * var(--scale, 1));
+  position: absolute;
+  bottom: calc(-20px * var(--scale, 1));
+  left: calc(((var(--container-width) - var(--blood-sprite-width)) / 2) * var(--scale, 1));
+  image-rendering: -moz-crisp-edges;
+  image-rendering: pixelated;
+
+  will-change: background-position-x;
+}
+
+@keyframes blooddrops {
+  0% {
+    background-position-x: calc(var(--blood-sprite-width) * var(--scale, 1) * 1);
+  } 
+  100% {
+    background-position-x: calc(var(--blood-sprite-width) * var(--scale, 1) * -11);
+  }
+}
+
+@keyframes dead {
+  from {
+    transform: translateY(calc(var(--height) * .3));
+    background-position-x: calc(var(--container-width) * var(--scale, 1) * -4);
+  }
+  to {
+    transform: translateY(calc(var(--height) * .4));
+    background-position-x: calc(var(--container-width) * var(--scale, 1) * -4);
+  }
+}
