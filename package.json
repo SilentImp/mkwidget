@@ -1,13 +1,13 @@
 {
-  "name": "sse",
+  "name": "mk-voting",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "mk styled voting app",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Anton Nemtsev",
   "license": "ISC",
   "dependencies": {
     "@godaddy/terminus": "^4.10.2",
