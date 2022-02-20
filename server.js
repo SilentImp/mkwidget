@@ -3,9 +3,11 @@ const { nanoid } = require('nanoid');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const multer  = require('multer');
+const helmet = require('helmet');
 const upload = multer({ dest: 'uploads/' });
 const http = require('http');
 const { createTerminus, HealthCheckError } = require('@godaddy/terminus');
+const { URL } = require('url');
 const PORT = 3000;
 
 let isFinished = false;
@@ -57,7 +59,7 @@ async function vote(request, respsonse, next, isUpVote) {
       isFinished,
     });
   } else {
-    respsonse.redirect(request.headers.referer || '/');
+    respsonse.redirect('back');
   }
   next();
 }
@@ -74,7 +76,7 @@ async function finish(request, respsonse, next) {
       isFinished,
     });
   } else {
-    respsonse.redirect(request.headers.referer || '/');
+    respsonse.redirect('back');
   }
   next();
 }
@@ -100,6 +102,11 @@ const downvote = async (request, respsonse, next) => vote(request, respsonse, ne
 
 const app = express();
 
+app.use(helmet({
+  noSniff: true,
+  hidePoweredBy: true,
+  referrerPolicy: { policy: 'same-origin'},
+}));
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.text());
