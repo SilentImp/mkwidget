@@ -1,11 +1,11 @@
 const CSS_URL = new URL('./MKCounter.css', import.meta.url).href;
 const form = `<form class="controls" method="post" enctype="multipart/form-data">
-<button formaction="/upvote" type="submit" aria-label="I love web-components!">
+<button class="love" formaction="/upvote" type="submit" aria-label="I love web-components!">
   <svg viewBox="0 0 700 500">
     <use href="#vote">
   </svg>
 </button>
-<button formaction="/downvote" type="submit" aria-label="I hate web-components!">
+<button class="hate" formaction="/downvote" type="submit" aria-label="I hate web-components!">
   <svg viewBox="0 0 700 500">
     <use href="#vote">
   </svg>
@@ -16,7 +16,12 @@ const controls = `<button class="finishHim" type="button" aria-label="Let's see 
   <use href="#stop">
 </svg>
 </button>`;
-const templateHTML = (hasVotes, hasControls) => `<style>@import "${CSS_URL}";</style>
+const reset = `<button class="resetVote" type="button" aria-label="Let's see the winner!">
+<svg viewBox="0 0 700 550">
+  <use href="#stop">
+</svg>
+</button>`;
+const templateHTML = (hasVotes, hasControls, hasReset) => `<style>@import "${CSS_URL}";</style>
 <svg
   class="sprite"
   width="700pt"
@@ -36,9 +41,11 @@ const templateHTML = (hasVotes, hasControls) => `<style>@import "${CSS_URL}";</s
     <div class="blood"></div>
   </div>
   <div class="scene"></div>
+  <div class="cloud"></div>
   <meter class="live" min="0" max="100" low="50" high="50" optimum="100" value="100"></meter>
   ${hasVotes ? form : ''}
   ${hasControls ? controls : ''}
+  ${hasReset ? reset : ''}
 </div>`;
 
 const SPRITE_CONTAINER_HEIGHT = 125;
@@ -64,7 +71,7 @@ class MKCounter extends HTMLElement {
     this.attachShadow({mode: 'open'});
 
     const template = document.createElement('TEMPLATE');
-    template.innerHTML = templateHTML(this.dataset.votes !== undefined, this.dataset.controls !== undefined);
+    template.innerHTML = templateHTML(this.dataset.votes !== undefined, this.dataset.controls !== undefined, this.dataset.reset !== undefined);
     this.shadowRoot.appendChild(template.content.cloneNode(true));
 
     this.submitHandler = this.submitHandler.bind(this);
@@ -73,6 +80,7 @@ class MKCounter extends HTMLElement {
     this.updateMeter = this.updateMeter.bind(this);
     this.updateScene = this.updateScene.bind(this);
     this.finishHimHandler = this.finishHimHandler.bind(this);
+    this.resetHandler = this.resetHandler.bind(this);
     this.resizeHandler = this.resizeHandler.bind(this);
 
     const events = new EventSource('/events');
@@ -97,6 +105,9 @@ class MKCounter extends HTMLElement {
     this.meter.setAttribute("optimum", MKCounter.votes);
     this.meter.setAttribute("high", Math.round(MKCounter.votes / 2));
     this.meter.setAttribute("low", Math.round(MKCounter.votes / 2));
+    this.meter.setAttribute("upvotes", Math.round(MKCounter.votes / 2));
+    this.style.setProperty('--up-votes', MKCounter.upvotes);
+    this.style.setProperty('--down-votes', MKCounter.votes - MKCounter.upvotes);
     this.updateScene();
   }
 
@@ -132,6 +143,12 @@ class MKCounter extends HTMLElement {
     if (this.finishHim !== null) {
       this.finishHim.addEventListener('click', this.finishHimHandler);
     }
+
+    this.resetVote = this.container.querySelector('.resetVote');
+    if (this.resetVote !== null) {
+      this.resetVote.addEventListener('click', this.resetHandler);
+    }
+
     this.updateMeter();
 
     const observer = new ResizeObserver(this.resizeHandler);
@@ -164,6 +181,12 @@ class MKCounter extends HTMLElement {
     const data = new FormData();
     data.append('ajax', 'true');
     navigator.sendBeacon(formaction, data);
+  }
+
+  resetHandler() {
+    const data = new FormData();
+    data.append('code', window.code);
+    navigator.sendBeacon('/reset', data);
   }
 
   finishHimHandler() {

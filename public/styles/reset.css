@@ -56,3 +56,10 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+body > h1 {
+	visibility: hidden;
+	position: fixed;
+	top: -999rem;
+	background: #000;
+	color: #fff;
+}

@@ -49,9 +49,11 @@ function sendEventsToAll() {
 }
 
 async function vote(request, respsonse, next, isUpVote) {
-  votes += 1;
-  if (isUpVote) upvotes += 1;
-  sendEventsToAll();
+  if (!isFinished) {
+    votes += 1;
+    if (isUpVote) upvotes += 1;
+    sendEventsToAll();
+  }
   if (request.body.ajax !== undefined) {
     respsonse.json({
       votes,
@@ -67,6 +69,25 @@ async function vote(request, respsonse, next, isUpVote) {
 async function finish(request, respsonse, next) {
   if (request.body.code === 'toasty') {
     isFinished = true;
+  }
+  sendEventsToAll();
+  if (request.body.ajax !== undefined) {
+    respsonse.json({
+      votes,
+      upvotes,
+      isFinished,
+    });
+  } else {
+    respsonse.redirect('back');
+  }
+  next();
+}
+
+async function reset(request, respsonse, next) {
+  if (request.body.code === 'toasty') {
+    isFinished = false;
+    upvotes = 0;
+    votes = 0;
   }
   sendEventsToAll();
   if (request.body.ajax !== undefined) {
@@ -118,6 +139,7 @@ app.get('/events', eventsHandler);
 app.post('/upvote', upload.none(), upvote);
 app.post('/downvote', upload.none(), downvote);
 app.post('/finish', upload.none(), finish);
+app.post('/reset', upload.none(), reset);
 
 const server = http.createServer(app);
 createTerminus(server, options);
