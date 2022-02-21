@@ -124,6 +124,7 @@ const downvote = async (request, respsonse, next) => vote(request, respsonse, ne
 const app = express();
 
 app.use(helmet({
+  frameguard: false,
   noSniff: true,
   hidePoweredBy: true,
   referrerPolicy: { policy: 'same-origin'},
