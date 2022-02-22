@@ -6,8 +6,7 @@ const multer  = require('multer');
 const helmet = require('helmet');
 const upload = multer({ dest: 'uploads/' });
 const http = require('http');
-const { createTerminus, HealthCheckError } = require('@godaddy/terminus');
-const { URL } = require('url');
+const { createTerminus } = require('@godaddy/terminus');
 const PORT = 3000;
 
 let isFinished = false;
@@ -125,6 +124,7 @@ const app = express();
 
 app.use(helmet({
   frameguard: false,
+  contentSecurityPolicy: false,
   noSniff: true,
   hidePoweredBy: true,
   referrerPolicy: { policy: 'same-origin'},
