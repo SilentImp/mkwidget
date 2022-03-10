@@ -13,7 +13,7 @@
     "@godaddy/terminus": "^4.10.2",
     "body-parser": "^1.19.1",
     "cors": "^2.8.5",
-    "express": "^4.17.2",
+    "express": "^4.17.3",
     "helmet": "^5.0.2",
     "lightship": "^6.8.0",
     "multer": "^1.4.4",
